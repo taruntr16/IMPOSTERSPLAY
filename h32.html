@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMPOSTER'S PLAY | PRO EDITION</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif']
+                    },
+                    colors: {
+                        darkBg: '#050a15',
+                        cardBg: '#0f172a',
+                        accent: '#00f2ff',
+                        danger: '#ff4d4d'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: radial-gradient(circle at center, #0f172a 0%, #050a15 100%);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        .pro-card {
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            height: 400px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .pro-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .neon-border {
+            border: 2px solid rgba(0, 242, 255, 0.5);
+        }
+
+        .page-section {
+            display: none;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .active-section {
+            display: flex;
+        }
+
+        .scan-line {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00f2ff, transparent);
+            position: absolute;
+            top: 0;
+            animation: scan 3s linear infinite;
+            z-index: 10;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0%;
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+
+        .btn-glitch {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glitch:after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+
+        .btn-glitch:hover:after {
+            left: 100%;
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .pop-in {
+            animation: popIn 0.5s cubic-bezier(0.26, 1.56, 0.44, 1) forwards;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        @keyframes popIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Checkbox styling */
+        input[type="checkbox"]:checked {
+            background-color: #00f2ff;
+            border-color: #00f2ff;
+        }
+    </style>
+</head>
+
+<body class="antialiased font-sans relative">
+
+    <div class="fixed inset-0 pointer-events-none z-[0]"
+        style="background-image: radial-gradient(rgba(0, 242, 255, 0.08) 1px, transparent 1px); background-size: 30px 30px;">
+    </div>
+
+    <div id="page-intro" class="page-section active-section justify-center items-center cursor-pointer relative z-10"
+        onclick="enterGame()">
+        <div class="text-center slide-up">
+            <div class="relative inline-block mb-6">
+                <i class="fa-solid fa-user-secret text-7xl text-accent animate-bounce"></i>
+                <div class="absolute -top-4 -left-4 w-4 h-4 border-t-2 border-l-2 border-accent"></div>
+                <div class="absolute -bottom-4 -right-4 w-4 h-4 border-b-2 border-r-2 border-accent"></div>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-display font-bold tracking-tighter mb-2">IMPOSTER'S <span
+                    class="text-accent">PLAY</span></h1>
+            <p class="text-gray-500 font-display tracking-[0.3em] text-xs uppercase mt-2">Security Protocol v3.0</p>
+            <div class="mt-12 text-accent/60 text-sm animate-pulse font-display tracking-widest">TAP TO INITIALIZE
+            </div>
+        </div>
+        <div class="absolute bottom-8 text-center w-full">
+            <p
+                class="text-sm font-display font-bold tracking-[0.3em] text-gray-500 hover:text-accent transition-colors">
+                A GAME BY TARUN T R</p>
+        </div>
+    </div>
+
+    <nav id="navbar" class="hidden fixed w-full z-50 top-0 border-b border-accent/20 bg-cardBg/90 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-user-secret text-accent text-xl"></i>
+                <span class="font-display font-bold text-lg tracking-widest">IMPOSTER'S PLAY</span>
+            </div>
+
+            <div class="sm:hidden flex items-center">
+                <button onclick="toggleMobileMenu()"
+                    class="text-gray-400 hover:text-accent transition-colors focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <div class="hidden sm:flex items-center space-x-6">
+                <button onclick="location.reload()"
+                    class="text-xs font-display text-gray-400 hover:text-accent transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-house"></i>
+                </button>
+                <button onclick="toggleInfoModal()" class="text-gray-400 hover:text-accent transition-colors">
+                    <i class="fa-solid fa-circle-info text-xl hover:scale-110 transition-transform"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden sm:hidden bg-cardBg border-b border-accent/20 px-6 py-4 space-y-4 fade-in">
+            <button onclick="location.reload()"
+                class="w-full text-left text-xs font-display text-gray-400 hover:text-accent transition-colors flex items-center gap-3 py-2">
+                <i class="fa-solid fa-house"></i> <span>TERMINATE SESSION</span>
+            </button>
+            <button onclick="toggleInfoModal()"
+                class="w-full text-left text-xs font-display text-gray-400 hover:text-accent transition-colors flex items-center gap-3 py-2">
+                <i class="fa-solid fa-circle-info"></i> <span>SYSTEM INTEL</span>
+            </button>
+        </div>
+    </nav>
+
+    <div id="info-modal" class="hidden fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 fade-in"
+        onclick="toggleInfoModal()">
+        <div class="glass-panel p-8 rounded-3xl border-2 border-accent/50 text-center max-w-sm w-full relative overflow-hidden transform transition-all scale-100"
+            onclick="event.stopPropagation()">
+            <div class="scan-line"></div>
+            <h3 class="text-2xl font-display font-bold mb-4 text-white tracking-widest"><i
+                    class="fa-solid fa-circle-info mr-2 text-accent"></i>INFO</h3>
+            <p class="text-gray-300 font-display text-sm tracking-wide">DEVELOPER: TARUN T R</p>
+            <div class="my-6 border-t border-white/10"></div>
+            <p class="text-xs text-gray-500 font-display tracking-widest uppercase mb-2">COMMUNICATION LINK:</p>
+            <a href="mailto:taruntr1615@gmail.com"
+                class="text-accent hover:text-white font-bold break-all transition-colors">taruntr1615@gmail.com</a>
+            <button onclick="toggleInfoModal()"
+                class="mt-8 w-full border border-accent/50 text-accent font-display font-bold py-3 rounded-xl hover:bg-accent/10 transition-colors tracking-widest active:scale-95">
+                CLOSE LINK
+            </button>
+        </div>
+    </div>
+
+    <div id="page-setup" class="page-section pt-24 px-4 pb-10 items-center z-10 relative">
+        <div class="w-full max-w-3xl glass-panel p-8 rounded-3xl slide-up border border-white/5 relative">
+            <h2 class="text-2xl font-display font-bold mb-8 text-center text-accent uppercase tracking-widest">Mission
+                Configuration</h2>
+            <form id="setup-form" onsubmit="startGame(event)" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-xs font-display text-gray-400 uppercase tracking-widest">Agents
+                            (3-20)</label>
+                        <input type="number" id="num-players" min="3" max="20" value="4"
+                            onchange="validatePlayerCounts()"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 focus:border-accent outline-none text-white transition-colors"
+                            required>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-display text-gray-400 uppercase tracking-widest">Imposters</label>
+                        <input type="number" id="num-imposters" min="1" value="1" onchange="validatePlayerCounts()"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 focus:border-accent outline-none text-white transition-colors"
+                            required>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-display text-gray-400 uppercase tracking-widest">Agent Registry</label>
+                    <div id="player-names-container"
+                        class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-display text-gray-400 uppercase tracking-widest">Target Sector</label>
+                    <select id="category" onchange="toggleCustomCategory()"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 focus:border-accent outline-none text-white font-display text-sm tracking-wide transition-colors">
+                        <option value="random" class="bg-cardBg">RANDOMIZED</option>
+                        <option value="daily" class="bg-cardBg">ESSENTIAL (Daily Use)</option>
+                        <option value="local" class="bg-cardBg">REGIONAL (Local Things)</option>
+                        <option value="country" class="bg-cardBg">GEOGRAPHIC (Countries)</option>
+                        <option value="food" class="bg-cardBg">ORGANIC (Food)</option>
+                        <option value="sports" class="bg-cardBg">ATHLETIC (Sports)</option>
+                        <option value="tamil_movie_heroes" class="bg-cardBg">CINEMATIC (Tamil Heroes)</option>
+                        <option value="animals" class="bg-cardBg">ZOOLOGIC (Animals)</option>
+                        <option value="colors" class="bg-cardBg">SPECTRUM (Colors)</option>
+                        <option value="vehicles" class="bg-cardBg">MECHANICAL (Vehicles)</option>
+                        <option value="custom" class="bg-cardBg">MANUAL OVERRIDE (Custom)</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-accent/5 border border-accent/20 p-4 rounded-xl">
+                    <div class="space-y-3">
+                        <label class="text-xs font-display text-accent uppercase tracking-widest"><i
+                                class="fa-solid fa-eye mr-2"></i>Imposter Intel</label>
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox" id="show-category-imposter"
+                                class="w-5 h-5 rounded border-white/30 bg-transparent text-accent focus:ring-accent accent-[#00f2ff]">
+                            <span class="text-white text-sm font-display group-hover:text-accent transition-colors">Show
+                                Target Sector to Imposter</span>
+                        </label>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-xs font-display text-accent uppercase tracking-widest"><i
+                                class="fa-solid fa-brain mr-2"></i>Hint Difficulty</label>
+                        <div class="flex gap-2">
+                            <button type="button" id="btn-hint-easy" onclick="setHintDifficulty('easy')"
+                                class="flex-1 py-2 rounded-lg border border-accent bg-accent text-black font-display text-sm transition-all shadow-[0_0_10px_rgba(0,242,255,0.3)]">EASY</button>
+                            <button type="button" id="btn-hint-hard" onclick="setHintDifficulty('hard')"
+                                class="flex-1 py-2 rounded-lg border border-white/20 bg-white/5 text-white font-display text-sm hover:border-accent/50 transition-all">DIFFICULT</button>
+                        </div>
+                        <input type="hidden" id="hint-difficulty-value" value="easy">
+                    </div>
+                </div>
+
+                <div id="custom-inputs"
+                    class="hidden space-y-4 p-5 border border-accent/30 rounded-xl bg-accent/5 fade-in">
+                    <h3 class="text-sm font-display font-bold text-accent tracking-widest uppercase"><i
+                            class="fa-solid fa-pen-to-square mr-2"></i>Manual Inject</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-display text-gray-400 uppercase mb-2 tracking-wide">Target
+                                Keyword</label>
+                            <input type="text" id="custom-word" placeholder="e.g. Inception"
+                                class="w-full bg-white/5 border border-white/10 rounded-lg py-2 px-4 text-white focus:border-accent outline-none">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-display text-danger uppercase mb-2 tracking-wide">Easy
+                                    Hint</label>
+                                <input type="text" id="custom-hint-easy" placeholder="e.g. A movie about dreams"
+                                    class="w-full bg-white/5 border border-danger/30 rounded-lg py-2 px-4 text-white focus:border-danger outline-none">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-display text-danger uppercase mb-2 tracking-wide">Difficult
+                                    Hint</label>
+                                <input type="text" id="custom-hint-hard" placeholder="e.g. Spinning top"
+                                    class="w-full bg-white/5 border border-danger/30 rounded-lg py-2 px-4 text-white focus:border-danger outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-accent text-black font-display font-bold py-4 rounded-xl btn-glitch transition-transform hover:scale-[1.02] active:scale-95 tracking-widest mt-4 shadow-[0_0_15px_rgba(0,242,255,0.4)]">
+                    DEPLOY MISSION
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="page-gameplay" class="page-section pt-24 px-4 items-center justify-center z-10 relative">
+        <div id="game-card" class="pro-card neon-border glass-panel flex flex-col p-8 pop-in">
+            <div
+                class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-accent/70 rounded-tl-[24px] pointer-events-none z-20">
+            </div>
+            <div
+                class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-accent/70 rounded-tr-[24px] pointer-events-none z-20">
+            </div>
+            <div
+                class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-accent/70 rounded-bl-[24px] pointer-events-none z-20">
+            </div>
+            <div
+                class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-accent/70 rounded-br-[24px] pointer-events-none z-20">
+            </div>
+
+            <div class="scan-line"></div>
+
+            <div id="card-front" class="flex-1 flex flex-col items-center justify-center space-y-6 fade-in">
+                <div class="text-gray-500 font-display text-xs tracking-[0.4em] uppercase">Identification Required</div>
+                <div
+                    class="w-20 h-20 rounded-full border-2 border-accent/20 flex items-center justify-center relative overflow-hidden">
+                    <i class="fa-solid fa-fingerprint text-4xl text-accent/40 animate-pulse"></i>
+                </div>
+                <div class="text-center">
+                    <p class="text-gray-400 text-sm mb-1 uppercase tracking-widest">Hand device to</p>
+                    <h2 id="current-player-name" class="text-3xl font-display font-bold text-white uppercase break-all">
+                        PLAYER</h2>
+                </div>
+                <button onclick="revealRole()"
+                    class="w-full py-4 border border-accent/50 text-accent font-display font-bold rounded-xl hover:bg-accent hover:text-black transition-all tracking-widest active:scale-95">
+                    TAP TO AUTHORIZE
+                </button>
+            </div>
+            <div id="card-back"
+                class="hidden flex-1 flex flex-col items-center justify-center space-y-6 text-center fade-in">
+                <div id="role-header" class="font-display text-xs tracking-[0.4em] uppercase mb-4">STATUS: SECURE</div>
+
+                <div id="civilian-view" class="hidden space-y-4 w-full">
+                    <div class="text-accent text-sm uppercase tracking-widest">Secret Keyword</div>
+                    <h1 id="secret-word-display"
+                        class="text-4xl md:text-5xl font-display font-bold text-white break-words">WORD</h1>
+                </div>
+
+                <div id="imposter-view" class="hidden space-y-4 w-full">
+                    <div class="text-danger font-display font-bold text-xl uppercase tracking-widest mb-1"><i
+                            class="fa-solid fa-user-ninja mr-2"></i>IMPOSTER</div>
+                    <div id="imposter-category-display"
+                        class="hidden text-accent text-xs font-display tracking-[0.2em] uppercase mb-2 border border-accent/30 bg-accent/10 rounded px-3 py-1 inline-block">
+                        SECTOR: [CATEGORY]
+                    </div>
+                    <div class="text-gray-400 text-xs uppercase tracking-widest mt-2 mb-1">Intercepted Intel</div>
+                    <h1 id="imposter-hint-display"
+                        class="text-2xl font-display font-bold text-white italic break-words">"HINT"</h1>
+                </div>
+
+                <button onclick="hideRoleAndNext()"
+                    class="w-full py-4 bg-white/10 text-white font-display font-bold rounded-xl hover:bg-white/20 transition-all tracking-widest active:scale-95 mt-auto">
+                    CLEAR SCREEN
+                </button>
+            </div>
+
+            <div class="mt-6">
+                <div class="flex justify-between text-[10px] font-display text-gray-500 mb-2 uppercase tracking-wider">
+                    <span>Protocol Progress</span>
+                    <span id="player-progress-text">0/0</span>
+                </div>
+                <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                    <div id="player-progress-bar"
+                        class="bg-accent h-full transition-all duration-500 shadow-[0_0_8px_#00f2ff]" style="width: 0%">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-discussion" class="page-section pt-24 px-4 items-center justify-center z-10 relative">
+        <div class="w-full max-w-xl glass-panel p-10 rounded-3xl text-center space-y-8 slide-up">
+            <i
+                class="fa-solid fa-microchip text-5xl text-accent transition-transform hover:rotate-180 duration-700"></i>
+            <h2 class="text-2xl font-display font-bold uppercase tracking-widest">Analysis Phase</h2>
+            <p class="text-gray-400 font-sans text-sm">Discuss and find the anomalies. The system has randomly selected
+                an agent to speak first.</p>
+            <div
+                class="py-6 bg-white/5 rounded-2xl border border-white/10 relative overflow-hidden transform transition-all hover:scale-105">
+                <div class="absolute inset-0 bg-accent/5"></div>
+                <p class="text-gray-500 text-xs font-display uppercase tracking-widest mb-2 relative z-10">First Witness
+                </p>
+                <h1 id="starting-player" class="text-4xl font-display font-bold text-accent relative z-10 uppercase">
+                    PLAYER</h1>
+            </div>
+            <button onclick="showResults()"
+                class="w-full py-4 bg-accent text-black font-display font-bold rounded-xl btn-glitch tracking-widest hover:scale-[1.02] active:scale-95 transition-transform shadow-[0_0_15px_rgba(0,242,255,0.4)]">
+                IDENTIFY IMPOSTER
+            </button>
+        </div>
+    </div>
+
+    <div id="page-results" class="page-section pt-24 px-4 pb-10 items-center justify-center z-10 relative">
+        <div class="w-full max-w-xl glass-panel p-10 rounded-3xl text-center space-y-8 border-2 border-danger pop-in">
+            <i class="fa-solid fa-skull text-5xl text-danger hover:animate-spin shadow-danger"></i>
+            <h2 class="text-xl font-display font-bold uppercase tracking-widest text-danger">Anomalies Detected</h2>
+            <div id="imposters-list" class="space-y-3"></div>
+            <div class="my-6 border-t border-white/10"></div>
+            <div class="text-gray-400">
+                <p class="text-xs font-display uppercase tracking-widest mb-2">Target Keyword Was</p>
+                <p id="final-word" class="text-3xl font-display font-bold text-accent break-words"></p>
+            </div>
+            <button onclick="location.reload()"
+                class="w-full py-4 bg-white/10 text-white font-display font-bold rounded-xl border border-white/20 hover:bg-white/20 transition-all tracking-widest mt-4 active:scale-95">
+                REBOOT SYSTEM
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA & DICTIONARY ---
+        const dictionary = {
+            daily: { words: ["Toothbrush", "Soap", "Mirror", "Pillow", "Comb", "Towel", "Clock"], cat: "ESSENTIAL" },
+            local: { words: ["Filter Coffee", "Auto Rickshaw", "Idli", "Silk Saree", "Temple Bell", "Tender Coconut", "Street Panipuri"], cat: "REGIONAL" },
+            country: { words: ["India", "Japan", "Brazil", "France", "Egypt", "Canada", "Australia"], cat: "GEOGRAPHIC" },
+            food: { words: ["Pizza", "Biryani", "Sushi", "Pasta", "Tacos", "Burger", "Noodles"], cat: "ORGANIC" },
+            sports: { words: ["Cricket", "Football", "Tennis", "Chess", "Hockey", "Basketball"], cat: "ATHLETIC" },
+            animals: { words: ["Lion", "Elephant", "Tiger", "Giraffe", "Panda", "Kangaroo"], cat: "ZOOLOGIC" },
+            vehicles: { words: ["Car", "Train", "Airplane", "Bicycle", "Boat", "Helicopter"], cat: "MECHANICAL" },
+            tamil_movie_heroes: { words: ["Rajinikanth", "Kamal Haasan", "Vijay", "Ajith", "Suriya", "Vikram", "Dhanush"], cat: "CINEMATIC" },
+            colors: { words: ["Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Black", "White"], cat: "SPECTRUM" }
+        };
+
+        // Updated dictionary with both easy and hard hints
+        const wordHints = {
+            "Toothbrush": { easy: "Used to clean teeth", hard: "Morning bristled routine" },
+            "Soap": { easy: "Used for washing body", hard: "Lathering bathroom item" },
+            "Mirror": { easy: "Shows your reflection", hard: "Glass that bounces light" },
+            "Pillow": { easy: "Rests under your head in bed", hard: "Soft sleep support" },
+            "Comb": { easy: "Used to fix your hair", hard: "Toothed styling tool" },
+            "Towel": { easy: "Used to dry yourself", hard: "Absorbent fabric" },
+            "Clock": { easy: "Tells the time", hard: "Ticking wall fixture" },
+
+            "Filter Coffee": { easy: "Morning hot drink", hard: "Traditional brewed beverage" },
+            "Auto Rickshaw": { easy: "Three-wheeled taxi", hard: "Yellow-black public transport" },
+            "Idli": { easy: "White round breakfast food", hard: "Steamed fermented batter" },
+            "Silk Saree": { easy: "Traditional women's clothing", hard: "Woven traditional drape" },
+            "Temple Bell": { easy: "Rings in a place of worship", hard: "Brass resonant object" },
+            "Tender Coconut": { easy: "Green fruit with water inside", hard: "Natural cooling drink" },
+            "Street Panipuri": { easy: "Spicy watery snack", hard: "Crispy hollow spheres" },
+
+            "India": { easy: "Country with Taj Mahal", hard: "Spices and extreme diversity" },
+            "Japan": { easy: "Country of sushi and anime", hard: "Land of the rising sun" },
+            "Brazil": { easy: "Famous for football and Amazon", hard: "Carnival nation" },
+            "France": { easy: "Country with Eiffel Tower", hard: "European wine and romance" },
+            "Egypt": { easy: "Country with Pyramids", hard: "Ancient desert civilization" },
+            "Canada": { easy: "Country with maple leaf flag", hard: "Northern neighbor of USA" },
+            "Australia": { easy: "Country with kangaroos", hard: "Massive island continent" },
+
+            "Pizza": { easy: "Round flatbread with cheese", hard: "Sliced Italian bake" },
+            "Biryani": { easy: "Famous spiced rice dish", hard: "Layered aromatic meat rice" },
+            "Sushi": { easy: "Japanese rice and fish", hard: "Seaweed wrapped delicacy" },
+            "Pasta": { easy: "Italian noodles like macaroni", hard: "Boiled wheat dough" },
+            "Tacos": { easy: "Mexican folded shell food", hard: "Corn tortilla dish" },
+            "Burger": { easy: "Meat patty between buns", hard: "Fast food sandwich" },
+            "Noodles": { easy: "Long stringy food", hard: "Slurped Asian staple" },
+
+            "Cricket": { easy: "Bat and ball game", hard: "Sport with pitch and stumps" },
+            "Football": { easy: "Kicking a ball into a goal", hard: "11v11 field game" },
+            "Tennis": { easy: "Racket and yellow ball game", hard: "Court sport with a net" },
+            "Chess": { easy: "Board game with king and queen", hard: "Black and white strategy" },
+            "Hockey": { easy: "Sport played with a stick", hard: "Ice or field striking game" },
+            "Basketball": { easy: "Throwing a ball in a hoop", hard: "Dribbling court game" },
+
+            "Lion": { easy: "King of the jungle", hard: "Big cat with a mane" },
+            "Elephant": { easy: "Big animal with a trunk", hard: "Massive grey mammal" },
+            "Tiger": { easy: "Big cat with orange and black stripes", hard: "Striped solitary predator" },
+            "Giraffe": { easy: "Animal with a very long neck", hard: "Tall spotted herbivore" },
+            "Panda": { easy: "Black and white bear", hard: "Bamboo eating bear" },
+            "Kangaroo": { easy: "Jumping animal with a pouch", hard: "Australian marsupial" },
+
+            "Car": { easy: "Four-wheeled road vehicle", hard: "Personal motor transport" },
+            "Train": { easy: "Runs on railway tracks", hard: "Locomotive with carriages" },
+            "Airplane": { easy: "Flies in the sky", hard: "Winged commercial transport" },
+            "Bicycle": { easy: "Two wheels with pedals", hard: "Human-powered cycle" },
+            "Boat": { easy: "Travels on water", hard: "Buoyant watercraft" },
+            "Helicopter": { easy: "Flies with spinning blades on top", hard: "Rotary-wing aircraft" },
+
+            "Rajinikanth": { easy: "The biggest Superstar", hard: "Stylish actor with sunglasses flip" },
+            "Kamal Haasan": { easy: "Ulaganayagan actor", hard: "Versatile method actor" },
+            "Vijay": { easy: "Thalapathy actor", hard: "Mass dancer hero" },
+            "Ajith": { easy: "Thala actor", hard: "Racing enthusiast hero" },
+            "Suriya": { easy: "Actor from Singam and Rolex", hard: "Intense versatile performer" },
+            "Vikram": { easy: "Chiyaan actor", hard: "Actor known for extreme makeovers" },
+            "Dhanush": { easy: "Actor who sang Kolaveri Di", hard: "National award winning slim hero" },
+
+            "Red": { easy: "Color of blood and apples", hard: "Color of danger and stop signs" },
+            "Blue": { easy: "Color of the sky and ocean", hard: "Cool primary hue" },
+            "Green": { easy: "Color of leaves and grass", hard: "Color representing nature" },
+            "Yellow": { easy: "Color of the sun and bananas", hard: "Bright primary color" },
+            "Purple": { easy: "Mix of red and blue", hard: "Royal majestic hue" },
+            "Orange": { easy: "Color of the fruit of the same name", hard: "Mix of red and yellow" },
+            "Black": { easy: "Color of the night sky", hard: "Absence of light" },
+            "White": { easy: "Color of snow and milk", hard: "Combination of all light" }
+        };
+
+        let gameState = {
+            players: [],
+            secretWord: "",
+            hint: "",
+            categoryName: "",
+            showCategoryToImposter: false,
+            currentPlayerIndex: 0
+        };
+
+        const AudioFX = {
+            ctx: null,
+            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+            playTick() {
+                try {
+                    this.init();
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.6, this.ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.1);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.1);
+                } catch (e) { }
+            },
+            playIntro() {
+                try {
+                    this.init();
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(100, this.ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(400, this.ctx.currentTime + 0.5);
+                    gain.gain.setValueAtTime(0, this.ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.5, this.ctx.currentTime + 0.2);
+                    gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.5);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.5);
+                } catch (e) { }
+            },
+            playReveal() {
+                try {
+                    this.init();
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0, this.ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.4, this.ctx.currentTime + 0.1);
+                    gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.4);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.4);
+                } catch (e) { }
+            }
+        };
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            AudioFX.playTick();
+        }
+
+        function toggleInfoModal() {
+            const modal = document.getElementById('info-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) AudioFX.playTick();
+        }
+
+        function toggleCustomCategory() {
+            const cat = document.getElementById('category').value;
+            const customInputs = document.getElementById('custom-inputs');
+            if (cat === 'custom') {
+                customInputs.classList.remove('hidden');
+            } else {
+                customInputs.classList.add('hidden');
+            }
+            AudioFX.playTick();
+        }
+
+        // Logic for Hint Difficulty Button Selection
+        function setHintDifficulty(level) {
+            AudioFX.playTick();
+            document.getElementById('hint-difficulty-value').value = level;
+            const btnEasy = document.getElementById('btn-hint-easy');
+            const btnHard = document.getElementById('btn-hint-hard');
+
+            if (level === 'easy') {
+                btnEasy.className = "flex-1 py-2 rounded-lg border border-accent bg-accent text-black font-display text-sm transition-all shadow-[0_0_10px_rgba(0,242,255,0.3)]";
+                btnHard.className = "flex-1 py-2 rounded-lg border border-white/20 bg-white/5 text-white font-display text-sm hover:border-accent/50 transition-all";
+            } else {
+                btnHard.className = "flex-1 py-2 rounded-lg border border-accent bg-accent text-black font-display text-sm transition-all shadow-[0_0_10px_rgba(0,242,255,0.3)]";
+                btnEasy.className = "flex-1 py-2 rounded-lg border border-white/20 bg-white/5 text-white font-display text-sm hover:border-accent/50 transition-all";
+            }
+        }
+
+        function enterGame() {
+            AudioFX.playIntro();
+            document.getElementById('navbar').classList.remove('hidden');
+            switchPage('page-intro', 'page-setup');
+            generatePlayerInputs();
+        }
+
+        function switchPage(oldP, newP) {
+            document.getElementById(oldP).classList.remove('active-section');
+            document.getElementById(newP).classList.add('active-section');
+        }
+
+        function validatePlayerCounts() {
+            const numP = parseInt(document.getElementById('num-players').value) || 3;
+            const imposterInput = document.getElementById('num-imposters');
+            imposterInput.max = numP - 1;
+            if (parseInt(imposterInput.value) >= numP) {
+                imposterInput.value = numP - 1 > 0 ? numP - 1 : 1;
+            }
+            generatePlayerInputs();
+        }
+
+        function generatePlayerInputs() {
+            const num = parseInt(document.getElementById('num-players').value) || 4;
+            const container = document.getElementById('player-names-container');
+            container.innerHTML = '';
+            for (let i = 0; i < num; i++) {
+                container.innerHTML += `<input type="text" id="p-name-${i}" value="AGENT ${i + 1}" class="w-full bg-white/5 border border-white/10 rounded-lg py-2 px-3 text-xs uppercase font-display focus:border-accent outline-none transition-all hover:bg-white/10">`;
+            }
+        }
+
+        function startGame(e) {
+            e.preventDefault();
+            AudioFX.playTick();
+            const numP = parseInt(document.getElementById('num-players').value);
+            const numI = parseInt(document.getElementById('num-imposters').value);
+
+            if (numI >= numP) {
+                alert("Critical Error: Number of imposters must be less than total agents.");
+                return;
+            }
+
+            const catKey = document.getElementById('category').value;
+            const hintDiff = document.getElementById('hint-difficulty-value').value;
+            gameState.showCategoryToImposter = document.getElementById('show-category-imposter').checked;
+
+            if (catKey === 'custom') {
+                const cWord = document.getElementById('custom-word').value.trim();
+                const cHintEasy = document.getElementById('custom-hint-easy').value.trim();
+                const cHintHard = document.getElementById('custom-hint-hard').value.trim();
+
+                if (!cWord || (!cHintEasy && !cHintHard)) {
+                    alert("System Override Failed: Please enter a custom word and at least one hint.");
+                    return;
+                }
+
+                gameState.secretWord = cWord;
+                gameState.categoryName = "MANUAL OVERRIDE";
+
+                // Fallback to the available hint if the specific difficulty one is missing
+                if (hintDiff === 'easy') {
+                    gameState.hint = cHintEasy || cHintHard;
+                } else {
+                    gameState.hint = cHintHard || cHintEasy;
+                }
+
+            } else {
+                const dictKeys = Object.keys(dictionary);
+                const selectedKey = catKey === 'random' ? dictKeys[Math.floor(Math.random() * dictKeys.length)] : catKey;
+                const cat = dictionary[selectedKey];
+
+                gameState.secretWord = cat.words[Math.floor(Math.random() * cat.words.length)];
+                gameState.categoryName = cat.cat;
+                gameState.hint = wordHints[gameState.secretWord][hintDiff];
+            }
+
+            gameState.players = [];
+            for (let i = 0; i < numP; i++) {
+                const pNameInput = document.getElementById(`p-name-${i}`);
+                gameState.players.push({
+                    name: pNameInput.value.trim() || `AGENT ${i + 1}`,
+                    isImposter: false
+                });
+            }
+
+            let indices = Array.from(Array(numP).keys());
+            indices.sort(() => Math.random() - 0.5);
+            for (let i = 0; i < numI; i++) {
+                gameState.players[indices[i]].isImposter = true;
+            }
+
+            gameState.currentPlayerIndex = 0;
+            switchPage('page-setup', 'page-gameplay');
+            const card = document.getElementById('game-card');
+            card.classList.remove('pop-in');
+            void card.offsetWidth;
+            card.classList.add('pop-in');
+            updateUI();
+        }
+
+        function updateUI() {
+            const p = gameState.players[gameState.currentPlayerIndex];
+            document.getElementById('current-player-name').innerText = p.name;
+            document.getElementById('player-progress-text').innerText = `${gameState.currentPlayerIndex + 1} / ${gameState.players.length}`;
+            document.getElementById('player-progress-bar').style.width = `${((gameState.currentPlayerIndex + 1) / gameState.players.length) * 100}%`;
+            document.getElementById('card-front').classList.remove('hidden');
+            document.getElementById('card-back').classList.add('hidden');
+        }
+
+        function revealRole() {
+            AudioFX.playReveal();
+            const p = gameState.players[gameState.currentPlayerIndex];
+            document.getElementById('card-front').classList.add('hidden');
+            document.getElementById('card-back').classList.remove('hidden');
+
+            if (p.isImposter) {
+                document.getElementById('role-header').innerText = "STATUS: ANOMALY";
+                document.getElementById('role-header').className = "font-display text-xs tracking-[0.4em] uppercase mb-4 text-danger animate-pulse";
+                document.getElementById('civilian-view').classList.add('hidden');
+                document.getElementById('imposter-view').classList.remove('hidden');
+
+                // Show/Hide category based on toggle
+                const categoryDisplay = document.getElementById('imposter-category-display');
+                if (gameState.showCategoryToImposter) {
+                    categoryDisplay.innerText = `SECTOR: ${gameState.categoryName}`;
+                    categoryDisplay.classList.remove('hidden');
+                } else {
+                    categoryDisplay.classList.add('hidden');
+                }
+
+                document.getElementById('imposter-hint-display').innerText = `"${gameState.hint}"`;
+            } else {
+                document.getElementById('role-header').innerText = "STATUS: AUTHORIZED";
+                document.getElementById('role-header').className = "font-display text-xs tracking-[0.4em] uppercase mb-4 text-accent";
+                document.getElementById('imposter-view').classList.add('hidden');
+                document.getElementById('civilian-view').classList.remove('hidden');
+                document.getElementById('secret-word-display').innerText = gameState.secretWord;
+            }
+        }
+
+        function hideRoleAndNext() {
+            AudioFX.playTick();
+            gameState.currentPlayerIndex++;
+            if (gameState.currentPlayerIndex < gameState.players.length) {
+                updateUI();
+            } else {
+                switchPage('page-gameplay', 'page-discussion');
+                const startP = gameState.players[Math.floor(Math.random() * gameState.players.length)].name;
+                document.getElementById('starting-player').innerText = startP;
+            }
+        }
+
+        function showResults() {
+            AudioFX.playIntro();
+            switchPage('page-discussion', 'page-results');
+            const list = document.getElementById('imposters-list');
+            list.innerHTML = '';
+            const imposters = gameState.players.filter(p => p.isImposter);
+            const imposterNames = imposters.map(p => p.name);
+
+            imposters.forEach(p => {
+                list.innerHTML += `<div class="bg-danger/20 border-2 border-danger/50 py-4 px-6 rounded-xl font-display text-xl tracking-wider text-white transform transition-transform hover:scale-105 shadow-[0_0_15px_rgba(255,77,77,0.3)]">${p.name}</div>`;
+            });
+            document.getElementById('final-word').innerText = gameState.secretWord;
+
+            // Voice Synthesis Integration
+            if ('speechSynthesis' in window) {
+                const textToSpeak = imposterNames.length > 1
+                    ? "The imposters are, " + imposterNames.join(" and ")
+                    : "The imposter is, " + imposterNames[0];
+
+                const msg = new SpeechSynthesisUtterance(textToSpeak);
+                msg.rate = 0.9;
+                msg.pitch = 0.5;
+
+                const setAndSpeak = () => {
+                    const voices = window.speechSynthesis.getVoices();
+                    const maleVoice = voices.find(v =>
+                        v.name.toLowerCase().includes('male') ||
+                        v.name.toLowerCase().includes('guy') ||
+                        v.name.toLowerCase().includes('david') ||
+                        v.name.toLowerCase().includes('mark')
+                    );
+
+                    if (maleVoice) {
+                        msg.voice = maleVoice;
+                    }
+                    window.speechSynthesis.speak(msg);
+                };
+
+                if (speechSynthesis.getVoices().length === 0) {
+                    speechSynthesis.addEventListener('voiceschanged', setAndSpeak, { once: true });
+                } else {
+                    setAndSpeak();
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
